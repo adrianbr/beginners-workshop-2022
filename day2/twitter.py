@@ -14,8 +14,9 @@ def _create_auth_headers(api_secret_key):
     }
     return headers
 
+
 def _paginated_get(url, headers, params, max_pages=5):
-    """Requests and yields up to `max_pages` pages of results as per twitter api documentation: https://developer.twitter.com/en/docs/twitter-api/pagination"""
+    """Requests and yields up to `max_pages` pages of results as per Twitter API docs: https://developer.twitter.com/en/docs/twitter-api/pagination"""
     while True:
         response = requests.get(url, headers=headers, params=params)
         response.raise_for_status()
@@ -57,20 +58,28 @@ def twitter_search(search_terms, start_time=None, end_time=None, api_secret_key=
             row['search_term'] = search_term
             yield row
 
+
+
 if __name__=='__main__':
+
     search_terms = ['python data engineer']
+    dataset_name ='tweets'
 
     # search last hour of tweets
     from datetime import datetime, timedelta, timezone
 
-    data_interval_start = datetime.now(timezone.utc) - timedelta(hours=3)
-    data_interval_end = datetime.now(timezone.utc) - timedelta(hours=2)
-
-    # format to twitter spec
+    data_interval_start = datetime.now(timezone.utc)- timedelta(hours=3)
+    data_interval_end = datetime.now(timezone.utc)- timedelta(hours=2)
+		
+		# format to twitter spec
     start_time = data_interval_start.isoformat()
     end_time = data_interval_end.isoformat()
 
+
+
     #exit()
+
+    # run the pipeline with your parameters
     pipeline = dlt.pipeline(pipeline_name='twitter', destination='bigquery', dataset_name='twitter_data')
 
     # run the pipeline with your parameters and print the outcome
